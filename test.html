@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        div {
+            width: 200px;
+            height: 200px;
+            background: lightcyan;
+            margin: 100px auto;
+            font-size: 30px;
+            text-align: center;
+            line-height: 200px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        div span {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: -200px;
+            top: 0;
+            background: darkgreen;
+            color: white;
+            opacity: 0.5;
+            filter: alpha(opacity=50)
+        }
+    </style>
+</head>
+<body>
+<div><span>我是遮罩层</span></div>
+<script src="js/utils.js"></script>
+<script src="js/move.js"></script>
+<script>
+    var oDiv = document.getElementsByTagName('div')[0];
+    function hoverDir(obj, e) {
+        var r = obj.offsetWidth / 2,
+                x = obj.offsetLeft + r - e.clientX,
+                y = obj.offsetTop + r - e.clientY;
+        return Math.round((Math.atan2(y, x) * 180 / Math.PI + 180) / 90) % 4;
+    }
+    var oSpan = oDiv.getElementsByTagName('span')[0];
+    oDiv.onmouseover = function (e) {
+        e = e || window.event;
+        var oTo = e.fromElement || relatedTarget;
+        if (this.contains(oTo)) return;
+        var n = hoverDir(this, e);
+        switch (n) {
+            case 0:
+                utils.css(oSpan, {left: 200, top: 0});
+                break;
+            case 1:
+                utils.css(oSpan, {left: 0, top: 200});
+                break;
+            case 2:
+                utils.css(oSpan, {left: -200, top: 0});
+                break;
+            default :
+                utils.css(oSpan, {left: 0, top: -200});
+                break;
+        }
+        animate(oSpan, {left: 0, top: 0}, 300, 0)
+    };
+    oDiv.onmouseleave = function (e) {
+        e = e || window.event;
+        var oTo = e.toElement || relatedTarget;
+        if (this.contains(oTo)) return;
+        var n = hoverDir(this, e);
+        switch (n) {
+            case 0:
+                animate(oSpan, {left: 200, top: 0}, 300, 0);
+                break;
+            case 1:
+                animate(oSpan, {left: 0, top: 200}, 300,0);
+                break;
+            case 2:
+                animate(oSpan, {left: -200, top: 0}, 300, 0);
+                break;
+            default :
+                animate(oSpan, {left: 0, top: -200}, 300, 0);
+                break;
+        }
+    }
+</script>
+</body>
+</html>
